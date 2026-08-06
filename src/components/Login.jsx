@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import useAuthHandler from '../hooks/useAuthHandler';
 import useToggleForSignUp from '../hooks/useToggleForSignup';
+import Footer from './Footer';
 
 const Login = ({ dataOfState }) => {
   const { isSignIn, toggleSignUp } = useToggleForSignUp(false);
@@ -21,7 +22,7 @@ const Login = ({ dataOfState }) => {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden text-white">
+    <div className="relative min-h-screen flex flex-col text-white overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 -z-10">
         <img
@@ -30,15 +31,15 @@ const Login = ({ dataOfState }) => {
           className="w-full h-full object-cover"
         />
 
-        <div className="absolute inset-0 bg-black/75" />
+        <div className="absolute inset-0 bg-black/75"></div>
       </div>
 
-      {/* Form */}
-      <div className="flex min-h-screen items-center justify-center px-4 py-24 sm:px-6">
-        {dataOfState && (
+      {/* Main Content */}
+      <div className="flex-1 flex items-center justify-center px-6 py-24">
+        {dataOfState ? (
           <form
             onSubmit={onSubmit}
-            className="w-full max-w-sm sm:max-w-md rounded-xl bg-black/80 backdrop-blur-md p-6 sm:p-8 md:p-10 shadow-2xl"
+            className="w-full max-w-md rounded-xl bg-black/80 backdrop-blur-md p-8 shadow-2xl"
           >
             <h1 className="mb-8 text-3xl font-bold">
               {isSignIn ? 'Sign In' : 'Sign Up'}
@@ -49,7 +50,7 @@ const Login = ({ dataOfState }) => {
                 ref={displayName}
                 type="text"
                 placeholder="Full Name"
-                className="mb-4 w-full rounded bg-gray-700 p-3 text-white placeholder-gray-400 outline-none transition focus:ring-2 focus:ring-red-600"
+                className="mb-4 w-full rounded bg-gray-700 p-3 text-white placeholder-gray-400 outline-none focus:ring-2 focus:ring-red-600"
               />
             )}
 
@@ -57,21 +58,22 @@ const Login = ({ dataOfState }) => {
               ref={email}
               type="email"
               placeholder="Email Address"
-              className="mb-4 w-full rounded bg-gray-700 p-3 text-white placeholder-gray-400 outline-none transition focus:ring-2 focus:ring-red-600"
+              className="mb-4 w-full rounded bg-gray-700 p-3 text-white placeholder-gray-400 outline-none focus:ring-2 focus:ring-red-600"
             />
 
             <input
               ref={password}
               type="password"
               placeholder="Password"
-              className="mb-5 w-full rounded bg-gray-700 p-3 text-white placeholder-gray-400 outline-none transition focus:ring-2 focus:ring-red-600"
+              className="mb-5 w-full rounded bg-gray-700 p-3 text-white placeholder-gray-400 outline-none focus:ring-2 focus:ring-red-600"
             />
 
-            {error && (
-              <p className="mb-4 text-sm text-red-500 sm:text-base">{error}</p>
-            )}
+            {error && <p className="mb-4 text-red-500 text-sm">{error}</p>}
 
-            <button className="w-full rounded bg-red-600 py-3 font-bold transition duration-300 hover:scale-[1.02] hover:bg-red-700 active:scale-95 cursor-pointer">
+            <button
+              type="submit"
+              className="w-full cursor-pointer rounded bg-red-600 py-3 font-bold transition hover:bg-red-700 hover:scale-[1.02] active:scale-95"
+            >
               {isSignIn ? 'Sign In' : 'Create Account'}
             </button>
 
@@ -86,8 +88,43 @@ const Login = ({ dataOfState }) => {
               </span>
             </p>
           </form>
+        ) : (
+          <div className="max-w-4xl text-center">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight">
+              Unlimited Movies,
+              <br />
+              TV Shows &
+              <span className="text-red-600"> AI Recommendations</span>
+            </h1>
+
+            <p className=" cursor-pointer mt-6 text-lg sm:text-xl text-gray-300">
+              Discover trending movies and get personalized recommendations
+              powered by Gemini AI.
+            </p>
+
+            <div className="mt-10 flex flex-wrap justify-center gap-4">
+              <div className=" cursor-pointer rounded-lg bg-black/60 px-6 py-4 backdrop-blur-md">
+                🎬 Browse Trending Movies
+              </div>
+
+              <div className="cursor-pointer rounded-lg bg-black/60 px-6 py-4 backdrop-blur-md">
+                🤖 AI Movie Search
+              </div>
+
+              <div className=" cursor-pointer rounded-lg bg-black/60 px-6 py-4 backdrop-blur-md">
+                ▶ Watch Trailers
+              </div>
+
+              <div className=" cursor-pointer rounded-lg bg-black/60 px-6 py-4 backdrop-blur-md">
+                🌍 Multi-language Support
+              </div>
+            </div>
+          </div>
         )}
       </div>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };
