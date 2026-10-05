@@ -1,4 +1,5 @@
 import { useSelector } from 'react-redux';
+
 import useGetPlayingMoviesTrailer from '../hooks/useGetPlayingMoviesTrailer';
 
 const VideoBG = ({ movieID }) => {
@@ -14,31 +15,25 @@ const VideoBG = ({ movieID }) => {
     );
   }
 
+  const trailerUrl = `https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1&controls=0&loop=1&playlist=${trailer.key}&playsinline=1&rel=0&modestbranding=1`;
+
   return (
     <div className="absolute inset-0 overflow-hidden">
       <div
         className="
-          absolute
-          top-1/2
-          left-1/2
-          -translate-x-1/2
-          -translate-y-1/2
-          w-[220vw]
-          h-[220vh]
-          sm:w-[180vw]
-          sm:h-[180vh]
-          md:w-[140vw]
-          md:h-[140vh]
-          lg:w-[120vw]
-          lg:h-[120vh]
-          xl:w-[110vw]
-          xl:h-[110vh]
+          absolute left-1/2 top-1/2
+          h-[220vh] w-[220vw]
+          -translate-x-1/2 -translate-y-1/2
+          sm:h-[180vh] sm:w-[180vw]
+          md:h-[140vh] md:w-[140vw]
+          lg:h-[120vh] lg:w-[120vw]
+          xl:h-[110vh] xl:w-[110vw]
           pointer-events-none
         "
       >
         <iframe
-          className="w-full h-full"
-          src={`https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1&controls=0&loop=1&playlist=${trailer.key}&playsinline=1&rel=0&modestbranding=1`}
+          className="h-full w-full"
+          src={trailerUrl}
           title="Movie Trailer"
           allow="autoplay; encrypted-media"
           allowFullScreen

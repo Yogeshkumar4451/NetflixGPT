@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
-import constantLang from '../utils/constantLang';
 import { useRef } from 'react';
+
+import constantLang from '../utils/constantLang';
 import { searchMoviesWithAI } from '../utils/gemini';
 import { API_OPTIONS } from '../utils/constants';
 import {
@@ -20,87 +21,93 @@ const GptSearchBar = () => {
 
   const searchMoviesInTMDB = async (movie) => {
     try {
-      const url = `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(
-        movie.title,
-      )}&primary_release_year=${movie.year}&include_adult=false&language=en-US&page=1`;
+      const query = new URLSearchParams({
+        query: movie.title,
+        include_adult: 'false',
+        language: 'en-US',
+        page: '1',
+      });
 
-      const data = await fetch(url, API_OPTIONS);
+      if (movie.year) {
+        query.set('primary_release_year', movie.year);
+      }
 
-      const json = await data.json();
+      const response = await fetch(
+        `https://api.themoviedb.org/3/search/movie?${query}`,
+        API_OPTIONS,
+      );
 
-      return json?.results || [];
-    } catch (err) {
-      console.error('TMDB Error:', err);
+      if (!response.ok) {
+        throw new Error(
+          `TMDB request failed: ${response.status} ${response.statusText}`,
+        );
+      }
+
+      const data = await response.json();
+
+      return data.results ?? [];
+    } catch (error) {
+      console.error(`Failed to search TMDB for "${movie.title}":`, error);
       return [];
     }
   };
 
   const handleGptSearchResult = async () => {
+    const query = pointTo.current?.value.trim();
+
+    if (!query) return;
+
+    dispatch(setHasSearched(true));
+    dispatch(clearGPTResults());
+    dispatch(setLoading(true));
+
     try {
-      const query = pointTo.current.value.trim();
+      const movies = await searchMoviesWithAI(query);
 
-      if (!query) return;
-
-      dispatch(setHasSearched(true));
-      dispatch(clearGPTResults());
-      dispatch(setLoading(true));
-
-      const text = await searchMoviesWithAI(query);
-
-      if (!text) {
-        dispatch(setLoading(false));
-
+      if (!movies?.length) {
         return;
       }
 
-      const responseResult = Array.isArray(text)
-        ? text
-        : text
-            .split(',')
-            .map((m) => ({ title: m.trim() }))
-            .filter((m) => m.title);
-
-      const data = responseResult.map((movie) => searchMoviesInTMDB(movie));
-
-      const tmdbResults = await Promise.all(data);
+      const results = await Promise.all(
+        movies.map((movie) => searchMoviesInTMDB(movie)),
+      );
 
       dispatch(
         addGPTMOVIERESULTS({
-          movieNames: responseResult,
-          movieResults: tmdbResults,
+          movieNames: movies,
+          movieResults: results,
         }),
       );
-
+    } catch (error) {
+      console.error('GPT Search failed:', error);
+    } finally {
       dispatch(setLoading(false));
-    } catch (err) {
-      dispatch(setLoading(false));
-      console.error('Gemini Error:', err);
     }
   };
 
   return (
-    <div className="flex justify-center items-center min-h-[40vh] sm:min-h-[50vh] md:min-h-[60vh] px-4">
+    <div className="flex justify-center px-4 py-10 sm:py-14 md:py-16">
       <form
-        onSubmit={(e) => {
-          e.preventDefault();
+        onSubmit={(event) => {
+          event.preventDefault();
           handleGptSearchResult();
         }}
-        className="w-full max-w-4xl bg-black/80 backdrop-blur-md rounded-xl shadow-lg p-4 sm:p-6 flex flex-col sm:flex-row gap-3"
+        className="flex w-full max-w-4xl flex-col gap-3 rounded-xl bg-black/80 p-4 shadow-lg backdrop-blur-md sm:flex-row sm:p-6"
       >
         <input
           ref={pointTo}
           type="text"
-          className="flex-1 p-3 bg-white rounded-lg outline-none focus:ring-2 focus:ring-purple-500 text-sm sm:text-base"
+          className="flex-1 rounded-lg bg-white p-3 text-sm outline-none focus:ring-2 focus:ring-purple-500 sm:text-base"
           placeholder={constantLang[lang]?.gptSearchPlaceHolder}
         />
 
         <button
           type="submit"
           disabled={isLoading}
-          className={`w-full sm:w-auto px-6 py-3 rounded-lg text-white font-semibold transition ${
+          className={`w-full rounded-lg px-6 py-3 font-semibold text-white transition sm:w-auto ${
             isLoading
-              ? 'bg-gray-600 cursor-not-allowed'
-              : 'bg-red-700 hover:bg-red-800 cursor-pointer'
+              ? 'cursor-not-allowed bg-gray-600'
+              : 'cursor-pointer bg-red-700 hover:bg-red-800'
           }`}
         >
           {isLoading ? 'Searching...' : constantLang[lang]?.search}

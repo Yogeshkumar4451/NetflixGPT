@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+
 import { addNowPlayingMovies } from '../app/slices/moviesSlice';
 import { API_OPTIONS } from '../utils/constants';
 
@@ -7,25 +8,29 @@ const useOnPlayMovies = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const getPlayingMovies = async () => {
+    const fetchNowPlayingMovies = async () => {
       try {
-        const data = await fetch(
+        const response = await fetch(
           'https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1',
           API_OPTIONS,
         );
 
-        const json = await data.json();
+        if (!response.ok) {
+          throw new Error(
+            `TMDB request failed: ${response.status} ${response.statusText}`,
+          );
+        }
 
-        dispatch(addNowPlayingMovies(json.results));
-      } catch (err) {
-        console.error('Failed to fetch now playing movies', err);
+        const data = await response.json();
+
+        dispatch(addNowPlayingMovies(data.results ?? []));
+      } catch (error) {
+        console.error('Failed to fetch now playing movies:', error);
       }
     };
 
-    getPlayingMovies();
+    fetchNowPlayingMovies();
   }, [dispatch]);
-
-  return null;
 };
 
 export default useOnPlayMovies;

@@ -1,47 +1,35 @@
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { addUser } from '../app/slices/userSlice';
+
 import getAuthErrorMessage from '../utils/authErrorHandler';
 import { signInUser, signUpUser } from '../utils/authService';
 import { checkValid } from '../utils/validation';
 
 const useAuthHandler = (isSignIn) => {
   const [error, setError] = useState(null);
-  const dispatch = useDispatch();
 
   const handleAuth = async ({ email, password, displayName }) => {
-    const message = checkValid({
+    const validationError = checkValid({
       email,
       password,
       displayName,
       isSignIn,
     });
 
-    if (message) {
-      setError(message);
+    if (validationError) {
+      setError(validationError);
       return;
     }
 
+    setError(null);
+
     try {
-      let user;
-
       if (isSignIn) {
-        user = await signInUser({ email, password });
+        await signInUser({ email, password });
       } else {
-        user = await signUpUser({ email, password, displayName });
+        await signUpUser({ email, password, displayName });
       }
-
-      dispatch(
-        addUser({
-          uid: user.uid,
-          email: user.email,
-          displayName: user.displayName,
-        }),
-      );
-
-      setError(null);
-    } catch (err) {
-      setError(getAuthErrorMessage(err.code));
+    } catch (authError) {
+      setError(getAuthErrorMessage(authError.code));
     }
   };
 

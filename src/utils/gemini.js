@@ -30,16 +30,22 @@ Rules:
 
 - No markdown
 - No explanation
-- No \`\`\`
 - No extra text
-- Only JSON array
+- Only return the JSON array
 `;
 
     const result = await geminiModel.generateContent(prompt);
+    const text = result.response.text();
 
-    return JSON.parse(result.response.text());
+    const movies = JSON.parse(text);
+
+    if (!Array.isArray(movies)) {
+      throw new Error('Gemini returned an invalid movie list');
+    }
+
+    return movies.filter((movie) => movie?.title);
   } catch (error) {
-    console.error('Gemini Error:', error);
+    console.error('Gemini search failed:', error);
     return [];
   }
 };

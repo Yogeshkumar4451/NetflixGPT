@@ -1,11 +1,11 @@
 const AILoading = () => {
   return (
     <div className="flex flex-col items-center justify-center py-20 text-white">
-      <div className="w-16 h-16 border-4 border-red-600 border-t-transparent rounded-full animate-spin mb-8"></div>
+      <div className="mb-8 h-16 w-16 animate-spin rounded-full border-4 border-red-600 border-t-transparent" />
 
-      <h1 className="text-3xl font-bold mb-4">🤖 Gemini Is Thinking...</h1>
+      <h1 className="mb-4 text-3xl font-bold">🤖 Gemini Is Thinking...</h1>
 
-      <p className="text-gray-300 text-lg animate-pulse">
+      <p className="animate-pulse text-lg text-gray-300">
         Finding the perfect movies for you...
       </p>
     </div>
