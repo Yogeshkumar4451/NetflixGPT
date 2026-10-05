@@ -1,9 +1,6 @@
-import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { useEffect } from 'react';
+import { signOut } from 'firebase/auth';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 
-import { addUser, removeUser } from '../app/slices/userSlice';
 import { changeLang } from '../app/slices/ConfigSlice';
 import { toggleGptSearchView } from '../app/slices/gptSlice';
 import { SUPPORTED_LANG } from '../utils/constants';
@@ -11,32 +8,9 @@ import { auth } from '../utils/firebase';
 
 const Header = ({ handleClick }) => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const user = useSelector((store) => store.user);
   const showGPTSearch = useSelector((store) => store.gpt.showGPTSearch);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      if (currentUser) {
-        dispatch(
-          addUser({
-            uid: currentUser.uid,
-            email: currentUser.email,
-            displayName: currentUser.displayName,
-          }),
-        );
-
-        navigate('/browse');
-        return;
-      }
-
-      dispatch(removeUser());
-      navigate('/');
-    });
-
-    return unsubscribe;
-  }, [dispatch, navigate]);
 
   const handleSignOut = () => {
     signOut(auth).catch((error) => {
@@ -86,7 +60,7 @@ const Header = ({ handleClick }) => {
 
           <button
             onClick={user ? handleSignOut : handleClick}
-            className="rounded bg-red-600 px-3 py-2 text-xs font-semibold transition hover:bg-red-700 sm:px-4 sm:text-sm md:text-base"
+            className="cursor-pointer rounded bg-red-600 px-3 py-2 text-xs font-semibold transition hover:bg-red-700 sm:px-4 sm:text-sm md:text-base"
           >
             {user ? 'Sign Out' : 'Sign In'}
           </button>

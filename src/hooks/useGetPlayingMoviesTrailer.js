@@ -24,13 +24,11 @@ const useGetPlayingMoviesTrailer = (movieID) => {
         }
 
         const data = await response.json();
-        const videos = data.results ?? [];
 
-        const trailer =
-          videos.find((video) => video.type === 'Trailer') ||
-          videos.find((video) => video.type === 'Teaser') ||
-          videos.find((video) => video.type === 'Clip') ||
-          videos[0];
+        const trailer = data.results?.find(
+          (video) =>
+            video.type === 'Trailer' && video.site === 'YouTube' && video.key,
+        );
 
         if (!trailer) return;
 

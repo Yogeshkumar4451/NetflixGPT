@@ -1,5 +1,17 @@
+# Dependencies
+node_modules/
+
+# Production Build
+dist/
+dist-ssr/
+
+# Environment Files
+.env
+.env.*
+!.env.example
+
 # Logs
-logs
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -7,25 +19,22 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-# Dependencies
-node_modules
-
-# Production Build
-dist
-dist-ssr
-
-# Environment Files
-.env
-.env.*
-!.env.example
-
 # Local Files
 *.local
+
+# ESLint
+.eslintcache
+
+# Test Coverage
+coverage/
 
 # Editor
 .vscode/*
 !.vscode/extensions.json
-.idea
+.idea/
+
+# Firebase
+.firebase/
 
 # OS Files
 .DS_Store
@@ -37,4 +46,3 @@ Thumbs.db
 *.njsproj
 *.sln
 *.sw?
-.firebase

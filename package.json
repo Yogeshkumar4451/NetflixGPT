@@ -7,7 +7,7 @@
     "dev": "vite",
     "start": "vite",
     "clean": "rmdir /s /q dist",
-    "deploy": "npm run clean && npm run build &&  firebase deploy",
+    "deploy": "npm run clean && npm run build && firebase deploy",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"

@@ -3,7 +3,8 @@ import {
   signInWithEmailAndPassword,
   updateProfile,
 } from 'firebase/auth';
-import { auth } from '../utils/fireBase';
+
+import { auth } from './firebase';
 
 export const signUpUser = async ({ email, password, displayName }) => {
   const userCredential = await createUserWithEmailAndPassword(
@@ -16,10 +17,7 @@ export const signUpUser = async ({ email, password, displayName }) => {
 
   await updateProfile(user, {
     displayName,
-    photoURL: 'https://avatars.githubusercontent.com/u/67315481?v=4',
   });
-
-  await user.reload();
 
   return user;
 };

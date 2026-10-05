@@ -7,7 +7,7 @@ const Footer = () => {
             <img
               src="/Thumbai_logo.png"
               alt="NetflixGPT Logo"
-              className="w-48 h-auto"
+              className="h-auto w-48"
             />
 
             <p className="mt-5 leading-8 text-gray-300">
@@ -88,7 +88,7 @@ const Footer = () => {
               <li>
                 <a
                   href="mailto:yogeshsahu4ldh@gmail.com"
-                  className="transition hover:text-red-500"
+                  className="break-words transition hover:text-red-500"
                 >
                   📧 yogeshsahu4ldh@gmail.com
                 </a>

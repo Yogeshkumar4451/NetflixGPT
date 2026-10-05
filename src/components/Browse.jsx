@@ -1,12 +1,12 @@
 import { useSelector } from 'react-redux';
 
-import GPTSearch from './GPTSearch';
+import GptSearch from './GptSearch';
 import MainContainer from './MainContainer';
 
 const Browse = () => {
   const showGPTSearch = useSelector((store) => store.gpt.showGPTSearch);
 
-  return showGPTSearch ? <GPTSearch /> : <MainContainer />;
+  return showGPTSearch ? <GptSearch /> : <MainContainer />;
 };
 
 export default Browse;

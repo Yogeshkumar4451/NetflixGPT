@@ -1,10 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const ConfigSlice = createSlice({
+const configSlice = createSlice({
   name: 'Config',
+
   initialState: {
     lang: 'en',
   },
+
   reducers: {
     changeLang: (state, action) => {
       state.lang = action.payload;
@@ -12,5 +14,6 @@ const ConfigSlice = createSlice({
   },
 });
 
-export default ConfigSlice.reducer;
-export const { changeLang } = ConfigSlice.actions;
+export default configSlice.reducer;
+
+export const { changeLang } = configSlice.actions;

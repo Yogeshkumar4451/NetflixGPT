@@ -25,15 +25,23 @@ const useAuthHandler = (isSignIn) => {
     try {
       if (isSignIn) {
         await signInUser({ email, password });
-      } else {
-        await signUpUser({ email, password, displayName });
+        return;
       }
+
+      await signUpUser({
+        email,
+        password,
+        displayName,
+      });
     } catch (authError) {
       setError(getAuthErrorMessage(authError.code));
     }
   };
 
-  return { handleAuth, error };
+  return {
+    handleAuth,
+    error,
+  };
 };
 
 export default useAuthHandler;

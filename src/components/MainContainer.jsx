@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import useOnPlayMovies from '../hooks/useOnPlayMovies';
@@ -5,9 +6,40 @@ import usePopularMovies from '../hooks/usepopularmovies';
 import useTopRated from '../hooks/useTopRated';
 import useUpcomingMovies from '../hooks/useUpcomingMovies';
 
-import VideoTitle from './VideoTitle';
-import VideoBG from './VideoBG';
+import { API_OPTIONS } from '../utils/constants';
 import SecondaryContainer from './SecondaryContainer';
+import VideoBG from './VideoBG';
+import VideoTitle from './VideoTitle';
+
+const findMovieWithTrailer = async (movies) => {
+  for (const movie of movies) {
+    try {
+      const response = await fetch(
+        `https://api.themoviedb.org/3/movie/${movie.id}/videos?language=en-US`,
+        API_OPTIONS,
+      );
+
+      if (!response.ok) {
+        continue;
+      }
+
+      const data = await response.json();
+
+      const hasTrailer = data.results?.some(
+        (video) =>
+          video.type === 'Trailer' && video.site === 'YouTube' && video.key,
+      );
+
+      if (hasTrailer) {
+        return movie;
+      }
+    } catch (error) {
+      console.error(`Failed to check trailer for "${movie.title}":`, error);
+    }
+  }
+
+  return null;
+};
 
 const MainContainer = () => {
   useOnPlayMovies();
@@ -17,7 +49,29 @@ const MainContainer = () => {
 
   const movies = useSelector((store) => store.movies.nowPlayingMovies);
 
-  if (!movies?.length) {
+  const [featuredMovie, setFeaturedMovie] = useState(null);
+
+  useEffect(() => {
+    if (!movies.length) return;
+
+    let cancelled = false;
+
+    const loadFeaturedMovie = async () => {
+      const movie = await findMovieWithTrailer(movies);
+
+      if (!cancelled) {
+        setFeaturedMovie(movie);
+      }
+    };
+
+    loadFeaturedMovie();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [movies]);
+
+  if (!movies.length || !featuredMovie) {
     return (
       <div className="flex h-screen items-center justify-center bg-black text-white">
         <div className="text-center">
@@ -28,16 +82,14 @@ const MainContainer = () => {
     );
   }
 
-  const mainMovie = movies[3] ?? movies[0];
-
   return (
     <>
       <div className="relative h-[70vh] w-full overflow-hidden sm:h-[80vh] md:h-screen">
-        <VideoBG movieID={mainMovie.id} />
+        <VideoBG movieID={featuredMovie.id} />
 
         <VideoTitle
-          title={mainMovie.original_title}
-          overview={mainMovie.overview}
+          title={featuredMovie.original_title}
+          overview={featuredMovie.overview}
         />
       </div>
 

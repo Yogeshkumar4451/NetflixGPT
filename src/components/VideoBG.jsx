@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import useGetPlayingMoviesTrailer from '../hooks/useGetPlayingMoviesTrailer';
 
 const VideoBG = ({ movieID }) => {
-  const trailer = useSelector((store) => store.movies?.trailers?.[movieID]);
+  const trailer = useSelector((store) => store.movies.trailers[movieID]);
 
   useGetPlayingMoviesTrailer(movieID);
 
@@ -15,20 +15,29 @@ const VideoBG = ({ movieID }) => {
     );
   }
 
-  const trailerUrl = `https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1&controls=0&loop=1&playlist=${trailer.key}&playsinline=1&rel=0&modestbranding=1`;
+  const trailerUrl =
+    `https://www.youtube.com/embed/${trailer.key}` +
+    `?autoplay=1` +
+    `&mute=1` +
+    `&controls=0` +
+    `&disablekb=1` +
+    `&fs=0` +
+    `&playsinline=1` +
+    `&rel=0`;
 
   return (
     <div className="absolute inset-0 overflow-hidden">
       <div
         className="
+          pointer-events-none
           absolute left-1/2 top-1/2
           h-[220vh] w-[220vw]
           -translate-x-1/2 -translate-y-1/2
-          sm:h-[180vh] sm:w-[180vw]
-          md:h-[140vh] md:w-[140vw]
-          lg:h-[120vh] lg:w-[120vw]
-          xl:h-[110vh] xl:w-[110vw]
-          pointer-events-none
+          scale-[1.8]
+          sm:h-[180vh] sm:w-[180vw] sm:scale-[1.5]
+          md:h-[140vh] md:w-[140vw] md:scale-[1.3]
+          lg:h-[120vh] lg:w-[120vw] lg:scale-[1.2]
+          xl:h-[110vh] xl:w-[110vw] xl:scale-[1.15]
         "
       >
         <iframe
@@ -36,7 +45,6 @@ const VideoBG = ({ movieID }) => {
           src={trailerUrl}
           title="Movie Trailer"
           allow="autoplay; encrypted-media"
-          allowFullScreen
         />
       </div>
 

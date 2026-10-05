@@ -14,6 +14,7 @@ const getAuthErrorMessage = (code) => {
   if (!errorMap[code]) {
     console.error('Unhandled Auth Error:', code);
   }
+
   return errorMap[code] || 'Something went wrong.';
 };
 

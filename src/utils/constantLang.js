@@ -1,12 +1,13 @@
-const constantLang = {
+const languageStrings = {
   en: {
-    search: 'GPT Search✨',
+    search: 'GPT Search ✨',
     gptSearchPlaceHolder: 'What Would You Like To Watch Today',
   },
+
   hindi: {
     search: 'जीपीटी खोज ✨',
     gptSearchPlaceHolder: 'आज आप क्या देखना चाहेंगे?',
   },
 };
 
-export default constantLang;
+export default languageStrings;

@@ -5,8 +5,8 @@ const gptSlice = createSlice({
 
   initialState: {
     showGPTSearch: false,
-    movieNames: null,
-    movieResults: null,
+    movieNames: [],
+    movieResults: [],
     isLoading: false,
     hasSearched: false,
   },
@@ -28,9 +28,10 @@ const gptSlice = createSlice({
     },
 
     clearGPTResults: (state) => {
-      state.movieNames = null;
-      state.movieResults = null;
+      state.movieNames = [];
+      state.movieResults = [];
     },
+
     setHasSearched: (state, action) => {
       state.hasSearched = action.payload;
     },

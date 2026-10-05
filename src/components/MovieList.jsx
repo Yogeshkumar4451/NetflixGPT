@@ -1,10 +1,10 @@
 import MovieCard from './MovieCard';
 
 const MovieList = ({ title, movies }) => {
-  if (!Array.isArray(movies) || movies.length === 0) return null;
+  if (!movies?.length) return null;
 
   return (
-    <section className="px-3 sm:px-4 md:px-6 py-4">
+    <section className="px-3 py-4 sm:px-4 md:px-6">
       <h2 className="mb-3 text-lg font-bold text-white sm:mb-4 sm:text-xl md:text-2xl lg:text-3xl">
         {title}
       </h2>
@@ -13,15 +13,14 @@ const MovieList = ({ title, movies }) => {
         className="
           flex
           gap-2
-          sm:gap-3
-          md:gap-4
-          lg:gap-5
           overflow-x-auto
           scroll-smooth
           pb-3
           snap-x
           snap-mandatory
-          scrollbar-hide
+          sm:gap-3
+          md:gap-4
+          lg:gap-5
         "
       >
         {movies.map((movie) => (

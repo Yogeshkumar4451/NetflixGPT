@@ -1,11 +1,14 @@
 import { useRef } from 'react';
 
 import useAuthHandler from '../hooks/useAuthHandler';
-import useToggleForSignUp from '../hooks/useToggleForSignup';
+import useToggleForSignUp from '../hooks/useToggleForSignUp';
 import Footer from './Footer';
 
+const inputClassName =
+  'mb-4 w-full rounded bg-gray-700 p-3 text-white placeholder-gray-400 outline-none focus:ring-2 focus:ring-red-600';
+
 const Login = ({ showForm }) => {
-  const { isSignIn, toggleSignUp } = useToggleForSignUp(false);
+  const { isSignIn, toggleSignUp } = useToggleForSignUp();
   const { handleAuth, error } = useAuthHandler(isSignIn);
 
   const emailRef = useRef(null);
@@ -49,7 +52,7 @@ const Login = ({ showForm }) => {
                 ref={displayNameRef}
                 type="text"
                 placeholder="Full Name"
-                className="mb-4 w-full rounded bg-gray-700 p-3 text-white placeholder-gray-400 outline-none focus:ring-2 focus:ring-red-600"
+                className={inputClassName}
               />
             )}
 
@@ -57,7 +60,7 @@ const Login = ({ showForm }) => {
               ref={emailRef}
               type="email"
               placeholder="Email Address"
-              className="mb-4 w-full rounded bg-gray-700 p-3 text-white placeholder-gray-400 outline-none focus:ring-2 focus:ring-red-600"
+              className={inputClassName}
             />
 
             <input
@@ -79,12 +82,13 @@ const Login = ({ showForm }) => {
             <p className="mt-6 text-sm text-gray-400">
               {isSignIn ? 'New to NetflixGPT?' : 'Already have an account?'}
 
-              <span
+              <button
+                type="button"
                 onClick={toggleSignUp}
                 className="ml-1 cursor-pointer font-semibold text-white hover:underline"
               >
                 {isSignIn ? 'Sign Up Now' : 'Sign In'}
-              </span>
+              </button>
             </p>
           </form>
         ) : (
